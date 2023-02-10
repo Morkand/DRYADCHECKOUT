@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.7.4-rc.1/web3.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+    crossorigin="anonymous"></script>
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <div class="container">
+    <div class="py-5 text-center">
+
+      <h2>Checkout Process</h2>
+      <p class="lead">Own Dryads in minutes</p>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4 order-md-2 mb-4">
+        <h4 class="d-flex justify-content-between align-items-center mb-3">
+          <span class="text-muted">Your purchase</span>
+          <span class="badge badge-secondary badge-pill">3</span>
+        </h4>
+        <ul class="list-group mb-3">
+          <li class="list-group-item d-flex justify-content-between lh-condensed">
+            <div>
+              <h6 class="my-0">DYD</h6>
+              <small class="text-muted">Dryad</small>
+            </div>
+            <div class="input-group" style="width:50%;">
+              <button onclick="ChangeQuantity(false)" class="btn btn-outline-secondary" type="button">-</button>
+              <input min="1" type="number" id="input-quantity" class="form-control"
+                style="text-align:center;" value="1" oninput="Calc()" aria-label="Recipient's username with two button addons">
+              <button onclick="ChangeQuantity(true)" class="btn btn-outline-secondary" type="button">+</button>
+            </div>
+          </li>
+          <li class="list-group-item d-flex justify-content-between lh-condensed">
+            <div>
+              <h6 class="my-0">Price</h6>
+              <small class="text-muted">peer DYD</small>
+              <span class="text-muted"></span>
+            </div>
+            <span id="span-price" class="text-muted">$0.6</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between lh-condensed">
+            <div>
+              <h6 class="my-0">Taxes</h6>
+            </div>
+            <span class="text-muted">$0</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <span>Total (USD)</span>
+            <strong id="strong-total">$0</strong>
+          </li>
+        </ul>
+
+        <form class="card p-2">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Promo code">
+            <div class="input-group-append">
+              <button type="submit" class="btn btn-secondary">Redeem</button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="col-md-8 order-md-1">
+        <h4 class="mb-3">Billing address</h4>
+        <form class="needs-validation" novalidate>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="firstName">First name</label>
+              <input type="text" class="form-control" id="firstName" placeholder="" value="" required>
+              <div class="invalid-feedback">
+                Valid first name is required.
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="lastName">Last name</label>
+              <input type="text" class="form-control" id="lastName" placeholder="" value="" required>
+              <div class="invalid-feedback">
+                Valid last name is required.
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="username">Binance Smart Chain Address</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">@</span>
+              </div>
+              <input type="text" class="form-control" id="wallet" placeholder="0X00000000000000000000000000000"
+                required>
+              <div class="invalid-feedback" style="width: 100%;">
+                Your Wallet is required.
+              </div>
+              <button onclick="connect()" type="button" id="btn-wallet" class="btn btn-success"> Web3 Wallet
+                Connect</button>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" placeholder="you@example.com" required>
+            <div class="invalid-feedback">
+              Please enter a valid email.
+            </div>
+          </div>
+          <hr class="mb-4">
+          <h4 class="mb-3">Payment</h4>
+
+          <div class="row">
+            <div class="col-md-4 custom-control custom-radio">
+              <input id="credit" name="paymentMethod" type="radio" class="custom-control-input" checked required>
+              <img class="img-buy" style="width: 40%;" src="https://bitpay.com/_nuxt/img/bitpay-logo-blue.1c0494b.svg"
+                alt="" srcset="">
+            </div>
+            <div class="col-md-4 custom-control custom-radio">
+              <input id="debit" name="paymentMethod" type="radio" class="custom-control-input" required>
+              <img class="img-buy" style="width: 50%;"
+                src="https://upload.wikimedia.org/wikipedia/commons/3/39/PayPal_logo.svg" alt="" srcset="">
+            </div>
+            <div class="col-md-4 custom-control custom-radio">
+              <input id="paypal" name="paymentMethod" type="radio" class="custom-control-input" required>
+              <img class="img-buy" style="width: 44%;"
+                src="https://forumpay.com/wp-content/uploads/2021/11/logo-forumpay-1.svg" alt="" srcset="">
+            </div>
+          </div>
+
+          <hr class="mb-4">
+          <button onclick="confirmation()" class="btn btn-primary btn-lg btn-block" type="button">Checkout</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-header">
+        <img id="img-toast"
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/Sign-check-icon.png/800px-Sign-check-icon.png"
+          class="rounded me-2" style="width:10% ;" alt="...">
+        <strong class="me-auto">Dryad</strong>
+        <small id="tost-time">1 sec ago</small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div id="toast-message" class="toast-body">
+        Hello, world! This is a toast message.
+      </div>
+    </div>
+  </div>
+  <script>
+    const tokenPrice = parseFloat(document.getElementById('span-price').innerHTML.split('$')[1]);
+    document.getElementById('strong-total').innerHTML = tokenPrice.toLocaleString('en', { style: 'currency', currency: 'USD' });
+    function Calc() {
+      let input = document.getElementById('input-quantity');
+      let quantity = parseInt(input.value);
+      let price = tokenPrice;
+      let total = 0;
+      console.log(quantity);  
+      if (quantity) {
+        total = price * quantity;
+      }else{
+        total = 0;  
+      }
+      document.getElementById('strong-total').innerHTML = total.toLocaleString('en', { style: 'currency', currency: 'USD' });;
+    }
+    function ChangeQuantity(s) {
+      let input = document.getElementById('input-quantity');
+      let price = tokenPrice;
+      let total = 0;
+      let quantity = parseInt(input.value);
+      if (s) {
+        quantity++;
+      } else {
+        quantity--;
+      }
+      if (quantity < 1) {
+        quantity = 1;
+      }
+      input.value = quantity;
+      total = price * quantity;
+      document.getElementById('strong-total').innerHTML = total.toLocaleString('en', { style: 'currency', currency: 'USD' });;
+
+    }
+    function getTime() {
+      let today = new Date();
+      let time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+      return time;
+    }
+    let walletReadInterval;
+    async function connect() {
+      await addNetwork();
+      let flag = true;
+      walletReadInterval = setInterval(async () => {
+        if (window.ethereum) {
+          await window.ethereum.request({ method: "eth_requestAccounts" });
+          window.web3 = new Web3(window.ethereum);
+          const account = web3.eth.accounts;
+          //Get the current MetaMask selected/active wallet
+          const walletAddress = account.givenProvider.selectedAddress;
+          document.getElementById('wallet').value = walletAddress;
+          document.getElementById('btn-wallet').classList.add('btn-secondary');
+          document.getElementById('btn-wallet').classList.remove('btn-success');
+          document.getElementById('btn-wallet').innerText = 'Web3 Wallet Connected';
+          document.getElementById('btn-wallet').disabled = true;
+
+          //console.log(`Wallet: ${walletAddress}`);
+          if (flag) {
+            document.getElementById("img-toast").src = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/Sign-check-icon.png/800px-Sign-check-icon.png";
+            document.getElementById('tost-time').innerHTML = getTime();
+            document.getElementById('toast-message').innerHTML = "Wallet Connected Successful";
+            const toastTrigger = document.getElementById('liveToastBtn')
+            const toastLiveExample = document.getElementById('liveToast')
+            const toast = new bootstrap.Toast(toastLiveExample);
+            toast.show();
+            flag = false;
+          }
+        } else {
+          if (flag) {
+            document.getElementById("img-toast").src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS332PnDkUJ2Fu9wDOIGVuk5npuRbWYiTtxlr_sFvGnBu72XucJsPaH8nvOjZKlXcpKHp8&usqp=CAU";
+            document.getElementById('tost-time').innerHTML = getTime();
+            document.getElementById('toast-message').innerHTML = "Wallet doesn't exist";
+            const toastTrigger = document.getElementById('liveToastBtn')
+            const toastLiveExample = document.getElementById('liveToast')
+            const toast = new bootstrap.Toast(toastLiveExample);
+            toast.show();
+            flag = false;
+          }
+        }
+      }, 1000);
+    }
+    async function addNetwork() {
+      let chainId = 97;
+      if (window.ethereum) {
+        if (window.ethereum.networkVersion !== chainId) {
+          try {
+            await window.ethereum.request({
+              method: 'wallet_switchEthereumChain',
+              params: [{ chainId: web3.utils.toHex(chainId) }]
+            });
+          } catch (err) {
+            // This error code indicates that the chain has not been added to MetaMask
+            if (err.code === 4902) {
+              await window.ethereum.request({
+                method: 'wallet_addEthereumChain',
+                params: [
+                  {
+                    chainName: 'Binance Smart Chain Test',
+                    chainId: web3.utils.toHex(chainId),
+                    nativeCurrency: { name: 'BINANCE COIN', decimals: 18, symbol: 'BNB' },
+                    rpcUrls: ['https://data-seed-prebsc-1-s1.binance.org:8545']
+                  }
+                ]
+              });
+            }
+          }
+        }
+      }
+    }
+    function confirmation() {
+      document.getElementById('email').value = '';
+      document.getElementById('firstName').value = '';
+      document.getElementById('lastName').value = '';
+      document.getElementById('input-quantity').value = '1';
+      document.getElementById('strong-total').innerHTML = tokenPrice.toLocaleString('en', { style: 'currency', currency: 'USD' });
+      document.getElementById('wallet').value = '';
+      document.getElementById('btn-wallet').classList.remove('btn-secondary');
+      document.getElementById('btn-wallet').classList.add('btn-success');
+      document.getElementById('btn-wallet').innerText = "Web3 Wallet Connect";
+      document.getElementById('btn-wallet').disabled = false;
+      clearInterval(walletReadInterval);
+      Swal.fire(
+        'Thank You!',
+        'Your Dryads are on the way',
+        'success'
+      )
+    }
+  </script>
+  <style>
+    #credit,
+    #debit,
+    #paypal {
+      width: 50px;
+      transform: scale(1.5);
+    }
+  </style>
+</body>
+
+</html>
